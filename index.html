@@ -1,9 +1,11 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cargo Sorter Express | Place Value Game</title>
+    <title>Place Value Production Line</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
       rel="stylesheet"
@@ -15,7 +17,49 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="game-container">
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcome-screen">
+      <div class="welcome-container">
+        <!-- Machine lights -->
+        <div class="machine-lights">
+          <div class="machine-light light-red"></div>
+          <div class="machine-light light-green"></div>
+          <div class="machine-light light-yellow"></div>
+        </div>
+
+        <h1 class="welcome-title">
+          <i class="fas fa-industry"></i> Place Value Production Line
+        </h1>
+        
+        <div class="caution-stripe"></div>
+        
+        <div class="welcome-content">
+          <h2><i class="fas fa-hard-hat"></i> How to Play</h2>
+          
+          <div class="instructions">
+            <p><i class="fas fa-1"></i>  Each round starts with a new target number. Your goal is to build this number using the correct digits.</p>
+            <p><i class="fas fa-2"></i>  As digits move along the conveyor belt, tap one to pick it up.<br> Then, tap the correct place value slot — HUNDREDS, TENS, or ONES — to drop it in.</p>
+            <p><i class="fas fa-3"></i> Fill all slots to match the target number to advance.</p>
+            <p><i class="fas fa-4"></i> Work quickly and accurately to maximize your score!</p>
+          </div>
+          
+          <div class="welcome-footer">
+            <button class="play-button" id="start-game">
+              <i class="fas fa-play"></i> START PRODUCTION
+            </button>
+          </div>
+        </div>
+        
+        <!-- Rivets for industrial look -->
+        <div class="detail-rivets detail-rivet-tl"></div>
+        <div class="detail-rivets detail-rivet-tr"></div>
+        <div class="detail-rivets detail-rivet-bl"></div>
+        <div class="detail-rivets detail-rivet-br"></div>
+      </div>
+    </div>
+
+    <!-- Game Screen (Initially Hidden) -->
+    <div class="game-container" id="game-container" style="display: none;">
       <!-- Machine lights -->
       <div class="machine-lights">
         <div class="machine-light light-red"></div>
@@ -26,7 +70,7 @@
       <!-- Game header -->
       <div class="game-header">
         <h1 class="game-title">
-          <i class="fas fa-industry"></i> Production Line
+          <i class="fas fa-industry"></i>Place Value Production Line
         </h1>
         <button class="sound-toggle"><i class="fas fa-volume-up"></i></button>
       </div>
@@ -36,10 +80,11 @@
         <div class="score-display">
           <i class="fas fa-star"></i> Score: <span id="score">0</span>
         </div>
-        <div class="timer-display">
+        <!-- <div class="timer-display">
           <i class="fas fa-clock"></i> Time: <span id="timer">60</span>s
-        </div>
+        </div> -->
       </div>
+
       <!-- Game displays -->
       <div class="game-displays">
         <div class="target-display">
@@ -92,6 +137,7 @@
     </div>
 
     <div class="game-modal-backdrop">
+      
       <div class="game-modal">
         <!-- Rivets for industrial look -->
         <div class="detail-rivets detail-rivet-tl"></div>
@@ -135,11 +181,84 @@
           </button>
         </div>
       </div>
+
+      <div class="error-modal">
+        <!-- Rivets for industrial look -->
+        <div class="detail-rivets detail-rivet-tl"></div>
+        <div class="detail-rivets detail-rivet-tr"></div>
+        <div class="detail-rivets detail-rivet-bl"></div>
+        <div class="detail-rivets detail-rivet-br"></div>
+    
+        <div class="modal-header error-header">
+          <h2 class="modal-title">
+            <i class="fas fa-exclamation-triangle"></i>
+            Production Error!
+          </h2>
+          <div class="machine-lights">
+            <div class="machine-light light-red"></div>
+            <div class="machine-light light-red blink"></div>
+          </div>
+        </div>
+    
+        <div class="caution-stripe"></div>
+    
+        <div class="modal-body">
+          <div class="error-message">Not Quite!</div>
+    
+          <div class="result-container error-container">
+            <div class="result-item">
+              <div class="result-label">Target Number:</div>
+              <div class="result-value target-number correct-answer"></div>
+            </div>
+    
+            <div class="result-item">
+              <div class="result-label">Your Answer:</div>
+              <div class="result-value user-answer error-text"></div>
+            </div>
+          </div>
+          
+          <div class="error-hint">
+            Check your components and try again!
+          </div>
+        </div>
+    
+        <div class="modal-footer">
+          <button class="incorrect-next-btn next-btn">
+            Next Number
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+  
     </div>
 
+    
+    
     <!-- Confetti animation container -->
     <div class="confetti-container" id="confetti-container"></div>
 
+    <audio id="background-music" loop autoplay="true">
+      <source src="assets/background-music.mp3" type="audio/mpeg" >
+    </audio>
+    <!-- <audio id="correct-sound">
+      <source src="audio/correct.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="incorrect-sound">
+      <source src="audio/incorrect.mp3" type="audio/mpeg">
+    </audio> -->
+    <audio id="select-sound">
+      <source src="assets/crate-select.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="drop-sound">
+      <source src="assets/crate-drop.mp3" type="audio/mpeg">
+    </audio>
+
     <script src="script.js"></script>
+    <script>
+      // Script to handle welcome screen functionality
+      document.addEventListener('DOMContentLoaded', function() {
+       
+       
+      });
+    </script>
   </body>
 </html>
