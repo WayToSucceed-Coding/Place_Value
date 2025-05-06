@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cargo Sorter Express | Place Value Game</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <!-- Machine lights -->
+      <div class="machine-lights">
+        <div class="machine-light light-red"></div>
+        <div class="machine-light light-green"></div>
+        <div class="machine-light light-yellow"></div>
+      </div>
+
+      <!-- Game header -->
+      <div class="game-header">
+        <h1 class="game-title">
+          <i class="fas fa-industry"></i> Production Line
+        </h1>
+        <button class="sound-toggle"><i class="fas fa-volume-up"></i></button>
+      </div>
+
+      <!-- Game footer -->
+      <div class="score-container">
+        <div class="score-display">
+          <i class="fas fa-star"></i> Score: <span id="score">0</span>
+        </div>
+        <div class="timer-display">
+          <i class="fas fa-clock"></i> Time: <span id="timer">60</span>s
+        </div>
+      </div>
+      <!-- Game displays -->
+      <div class="game-displays">
+        <div class="target-display">
+          <div class="display-label">TARGET NUMBER</div>
+          <span id="target-number">425</span>
+        </div>
+        <div class="current-display">
+          <div class="display-label">CURRENT NUMBER</div>
+          <span id="current-number">0</span>
+        </div>
+      </div>
+
+      <!-- Caution stripe -->
+      <div class="caution-stripe"></div>
+
+      <!-- Place value slots -->
+      <div class="place-value-slots">
+        <div class="detail-rivets detail-rivet-tl"></div>
+        <div class="detail-rivets detail-rivet-tr"></div>
+        <div class="detail-rivets detail-rivet-bl"></div>
+        <div class="detail-rivets detail-rivet-br"></div>
+
+        <div class="slot" data-value="100">
+          <div class="slot-label">HUNDREDS</div>
+          <div class="slot-value">0</div>
+        </div>
+        <div class="slot" data-value="10">
+          <div class="slot-label">TENS</div>
+          <div class="slot-value">0</div>
+        </div>
+        <div class="slot" data-value="1">
+          <div class="slot-label">ONES</div>
+          <div class="slot-value">0</div>
+        </div>
+      </div>
+
+      <!-- Conveyor system -->
+      <div class="conveyor-system">
+        <div class="conveyor-belt">
+          <div class="conveyor-pattern"></div>
+          <div class="conveyor-rollers"></div>
+          <div class="cargo-container">
+            <div class="cargo-crate" draggable="true">5</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caution stripe -->
+      <div class="caution-stripe"></div>
+    </div>
+
+    <div class="game-modal-backdrop">
+      <div class="game-modal">
+        <!-- Rivets for industrial look -->
+        <div class="detail-rivets detail-rivet-tl"></div>
+        <div class="detail-rivets detail-rivet-tr"></div>
+        <div class="detail-rivets detail-rivet-bl"></div>
+        <div class="detail-rivets detail-rivet-br"></div>
+
+        <div class="modal-header">
+          <h2 class="modal-title">
+            <i class="fas fa-check-circle"></i>
+            Production Success!
+          </h2>
+          <div class="machine-lights">
+            <div class="machine-light light-green"></div>
+            <div class="machine-light light-yellow"></div>
+          </div>
+        </div>
+
+        <div class="caution-stripe"></div>
+
+        <div class="modal-body">
+          <div class="success-message">Excellent!</div>
+
+          <div class="result-container">
+            <div class="result-item">
+              <div class="result-label">You correctly built:</div>
+              <div class="result-value target-number"></div>
+            </div>
+
+            <div class="result-item">
+              <div class="result-label">You earned:</div>
+              <div class="points-value">+100 points</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="next-btn">
+            Next Number
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confetti animation container -->
+    <div class="confetti-container" id="confetti-container"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
