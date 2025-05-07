@@ -91,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modify your sound toggle button handler:
     soundToggle.addEventListener('click', () => {
+
+        console.log("Sound toggle clicked");
         gameState.soundOn = !gameState.soundOn;
 
         // Update icon
@@ -581,14 +583,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000 + (i * 300));
         });
     }
-
-    // Toggle sound
-    soundToggle.addEventListener('click', () => {
-        gameState.soundOn = !gameState.soundOn;
-        soundToggle.innerHTML = gameState.soundOn
-            ? '<i class="fas fa-volume-up"></i>'
-            : '<i class="fas fa-volume-mute"></i>';
-    });
 
 
 });
