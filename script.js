@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         targetNumber: 0,
         currentDigits: [],
         score: 0,
-        timeLeft: 60,
+        timeLeft: 45,
         gameActive: false,
         difficulty: "medium",
         placeValueSlots: [],
@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    var cratesTimer = null;
+
     // Conveyor constants
     const CRATE_WIDTH = 70;
     const CRATE_SPACING = 20;
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentNumberDisplay = document.getElementById('current-number');
     const targetNumberDisplay = document.getElementById('target-number');
     const scoreDisplay = document.getElementById('score');
-    // const timerDisplay = document.getElementById('timer');
+    const timerDisplay = document.getElementById('timer');
     const soundToggle = document.querySelector('.sound-toggle');
     const machineLights = document.querySelectorAll('.machine-light');
     // Get elements
@@ -92,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modify your sound toggle button handler:
     soundToggle.addEventListener('click', () => {
 
-        console.log("Sound toggle clicked");
         gameState.soundOn = !gameState.soundOn;
 
         // Update icon
@@ -117,10 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.targetNumber = 0;
         gameState.currentDigits = [];
         gameState.score = 0;
-        gameState.timeLeft = 60;
+        gameState.timeLeft = 45;
         gameState.gameActive = true;
-        gameState.batchInProgress = false;
         gameState.crates = [];
+
+        const myDiv = document.querySelector('.cargo-container');
+            while (myDiv.firstChild) {
+                myDiv.removeChild(myDiv.firstChild);
+            }
 
         // Generate target number
         generateTargetNumber();
@@ -134,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Start systems
         startConveyor();
-        //startTimer();
+        startTimer();
 
         // Visual feedback
         animateMachineLights();
@@ -227,58 +232,68 @@ document.addEventListener('DOMContentLoaded', () => {
     function startConveyor() {
         conveyorBelt.querySelector('.cargo-container').innerHTML = '';
         gameState.crates = [];
-        gameState.batchInProgress = false;
         createCrates()
+    }
+
+    function createBatch() {
+        const missingDigits = getMissingDigits();
+        const correctDigit = missingDigits[Math.floor(Math.random() * missingDigits.length)];
+
+        // Create batch with one correct and two random digits
+        const batchDigits = [
+            correctDigit,
+            Math.floor(Math.random() * 10),
+            Math.floor(Math.random() * 10)
+        ];
+
+        batchDigits.forEach((digit, i) => {
+
+            const cargoContainer = conveyorBelt.querySelector('.cargo-container');
+            const crate = document.createElement('div');
+            crate.className = 'cargo-crate';
+            crate.textContent = digit;
+
+            crate.addEventListener('click', () => handleCrateClick(crate));
+
+            // Position with proper spacing
+            const startOffset = i * (CRATE_WIDTH + CRATE_SPACING);
+            crate.style.left = `-${CRATE_WIDTH + startOffset}px`;
+            cargoContainer.appendChild(crate);
+
+            let speed = CONVEYOR_SPEED;
+            if (gameState.difficulty === "easy") speed = 15000;
+            if (gameState.difficulty === "hard") speed = 7000;
+
+            const animation = crate.animate(
+                [
+                    { transform: 'translateX(0)' },
+                    { transform: `translateX(${conveyorBelt.offsetWidth + CRATE_WIDTH + 200}px)` }
+                ],
+                { duration: speed, fill: 'forwards' }
+            );
+
+            animation.onfinish = () => {
+                if (crate.parentNode) {
+                    cargoContainer.removeChild(crate);
+                    gameState.crates = gameState.crates.filter(c => c !== crate);
+                }
+            };
+        });
     }
 
     function createCrates() {
 
-        setInterval(() => {
+        createBatch();
 
-            const missingDigits = getMissingDigits();
-            const correctDigit = missingDigits[Math.floor(Math.random() * missingDigits.length)];
-
-            // Create batch with one correct and two random digits
-            const batchDigits = [
-                correctDigit,
-                Math.floor(Math.random() * 10),
-                Math.floor(Math.random() * 10)
-            ];
-
-            batchDigits.forEach((digit, i) => {
-
-                const cargoContainer = conveyorBelt.querySelector('.cargo-container');
-                const crate = document.createElement('div');
-                crate.className = 'cargo-crate';
-                crate.textContent = digit;
-
-                crate.addEventListener('click', () => handleCrateClick(crate));
-
-                // Position with proper spacing
-                const startOffset = i * (CRATE_WIDTH + CRATE_SPACING);
-                crate.style.left = `-${CRATE_WIDTH + startOffset}px`;
-                cargoContainer.appendChild(crate);
-
-                let speed = CONVEYOR_SPEED;
-                if (gameState.difficulty === "easy") speed = 15000;
-                if (gameState.difficulty === "hard") speed = 7000;
-
-                const animation = crate.animate(
-                    [
-                        { transform: 'translateX(0)' },
-                        { transform: `translateX(${conveyorBelt.offsetWidth + CRATE_WIDTH + 200}px)` }
-                    ],
-                    { duration: speed, fill: 'forwards' }
-                );
-
-                animation.onfinish = () => {
-                    if (crate.parentNode) {
-                        cargoContainer.removeChild(crate);
-                        gameState.crates = gameState.crates.filter(c => c !== crate);
-                    }
-                };
-            })
+        cratesTimer=setInterval(() => {
+            if (!gameState.gameActive){
+                console.log('Creating crates stopped')
+                clearInterval(cratesTimer)
+            }
+            createBatch()
+           
         }, 4000)
+
     }
 
     // Handle crate click/tap
@@ -325,9 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
             processPlacement(digit, position, slot);
         });
 
-
     }
-
 
     // Animate crate to slot
     function animateCrateToSlot(crate, slot, callback) {
@@ -398,22 +411,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // // Timer system
-    // function startTimer() {
-    //     const timer = setInterval(() => {
-    //         if (!gameState.gameActive) {
-    //             clearInterval(timer);
-    //             return;
-    //         }
+    function startTimer() {
+        const timer = setInterval(() => {
+            if (!gameState.gameActive) {
+                clearInterval(timer);
+                return;
+            }
 
-    //         gameState.timeLeft--;
-    //         timerDisplay.textContent = gameState.timeLeft;
+            gameState.timeLeft--;
+            timerDisplay.textContent = gameState.timeLeft;
 
-    //         if (gameState.timeLeft <= 0) {
-    //             clearInterval(timer);
-    //             endGame();
-    //         }
-    //     }, 1000);
-    // }
+            if (gameState.timeLeft <= 0) {
+                clearInterval(timer);
+                gameState.gameActive = false;
+                endGame();
+            }
+        }, 1000);
+    }
 
     // Update displays
     function updateCurrentNumberDisplay() {
@@ -436,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
         targetNumberDisplay.textContent = formatNumber(gameState.targetNumber);
         updateCurrentNumberDisplay();
         scoreDisplay.textContent = formatNumber(gameState.score);
-        // timerDisplay.textContent = gameState.timeLeft;
+        timerDisplay.textContent = gameState.timeLeft;
     }
 
     // Check game completion
@@ -444,13 +458,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.currentDigits.every(digit => digit !== null)) {
 
             if (gameState.currentNumber == formatNumber(gameState.targetNumber)) {
-                const points = gameState.difficulty === "easy" ? 50 :
-                    gameState.difficulty === "hard" ? 200 : 100;
+                const points = gameState.difficulty === "easy" ? 5 :
+                    gameState.difficulty === "hard" ? 20 : 10;
                 gameState.score += points;
 
                 // Visual celebration
                 targetNumberDisplay.classList.add('celebrate');
                 showCongratulatoryModal(points);
+
+                gameState.gameActive = false;
 
             }
             else {
@@ -511,6 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.error-modal').style.display = 'block';
         document.querySelector('.correct-answer').textContent = formatNumber(gameState.targetNumber);
         document.querySelector('.user-answer').textContent = gameState.currentNumber;
+        gameState.gameActive = false;
         // document.querySelector('.error-message').textContent = "Incorrect placement! Try again.";
         // // Close modal
         // document.querySelector('.close-btn').addEventListener('click', function () {
@@ -522,8 +539,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function showCongratulatoryModal(points) {
 
         document.querySelector('.game-modal-backdrop').style.display = 'flex';
-        document.querySelector('.game-modal').style.display = 'block';
+        document.querySelector('.success-modal').style.display = 'block';
         document.querySelector('.result-value').textContent = formatNumber(gameState.targetNumber);
+        clearInterval(cratesTimer)
         createConfetti()
 
     }
@@ -535,11 +553,64 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close modal or go to next level
         nextBtn.addEventListener('click', function () {
 
+            document.querySelector('.game-modal-backdrop').style.display = 'none';
+            document.querySelector('.success-modal').style.display = 'none';
+            document.querySelector('.error-modal').style.display = 'none';
+
             gameState.targetNumber = 0;
             gameState.currentDigits = [];
-            gameState.timeLeft = 60;
+            gameState.timeLeft = 45;
             gameState.gameActive = true;
-            gameState.batchInProgress = false;
+            gameState.crates = [];
+
+            clearInterval(cratesTimer);
+
+            const myDiv = document.querySelector('.cargo-container');
+            while (myDiv.firstChild) {
+                myDiv.removeChild(myDiv.firstChild);
+            }
+
+            // Generate target number
+            generateTargetNumber();
+
+            gameState.currentDigits = Array(gameState.targetNumber.toString().length).fill(null);
+
+            // Create place value slots
+            createPlaceValueSlots();
+
+            // Update displays
+            updateDisplays();
+
+            startConveyor()
+
+            startTimer()
+
+         
+        });
+
+
+    })
+
+    // End game
+    function endGame() {
+        gameState.gameActive = false;
+        document.querySelector('.game-modal-backdrop').style.display = 'flex';
+        document.querySelector('.restart-modal').style.display = 'block';
+        //Stop creating crates
+        clearInterval(cratesTimer);
+
+    }
+
+    document.querySelector('.restart-btn').addEventListener('click', function () {
+
+        // Hide modals
+        document.querySelector('.game-modal-backdrop').style.display = 'none';
+        document.querySelector('.restart-modal').style.display = 'none';
+            gameState.score=0;
+            gameState.targetNumber = 0;
+            gameState.currentDigits = [];
+            gameState.timeLeft = 45;
+            gameState.gameActive = true;
             gameState.crates = [];
 
             const myDiv = document.querySelector('.cargo-container');
@@ -558,22 +629,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update displays
             updateDisplays();
 
-            // startConveyor()
+            //Start Conveyor
+            startConveyor();
 
-            document.querySelector('.game-modal-backdrop').style.display = 'none';
-            document.querySelector('.game-modal').style.display = 'none';
-            document.querySelector('.error-modal').style.display = 'none';
-        });
-
-
-    })
+            //Start Timer
+            startTimer();
 
 
-    // End game
-    function endGame() {
-        gameState.gameActive = false;
-
-    }
+    });
 
     // Animate machine lights
     function animateMachineLights() {

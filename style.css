@@ -751,7 +751,7 @@ body {
     animation: fadeIn 0.3s ease-out;
 }
 
-.game-modal {
+.success-modal {
     background: linear-gradient(145deg, #f0f0f0, #d9d9d9);
     border-radius: 10px;
     width: 90%;
@@ -995,6 +995,38 @@ body {
   animation: blink 1s infinite;
 }
 
+.restart-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--secondary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.restart-btn i {
+    margin-left: 10px;
+}
+
+.restart-btn:hover {
+    background-color: #023e8a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+.restart-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
 @keyframes flash {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
@@ -1003,6 +1035,20 @@ body {
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
+}
+
+.restart-modal {
+    background: linear-gradient(145deg, #f0f0f0, #d9d9d9);
+    border-radius: 10px;
+    width: 90%;
+    display: none;
+    max-width: 450px;
+    position: relative;
+    padding: 0;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    border: 4px solid var(--metal-dark);
+    overflow: hidden;
+    animation: slideIn 0.5s ease-out;
 }
 
 /* Confetti animation */

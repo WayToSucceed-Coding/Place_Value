@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,6 +15,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+
     <!-- Welcome Screen -->
     <div class="welcome-screen" id="welcome-screen">
       <div class="welcome-container">
@@ -80,9 +79,9 @@
         <div class="score-display">
           <i class="fas fa-star"></i> Score: <span id="score">0</span>
         </div>
-        <!-- <div class="timer-display">
-          <i class="fas fa-clock"></i> Time: <span id="timer">60</span>s
-        </div> -->
+        <div class="timer-display">
+          <i class="fas fa-clock"></i> Time: <span id="timer">45</span>s
+        </div>
       </div>
 
       <!-- Game displays -->
@@ -138,7 +137,7 @@
 
     <div class="game-modal-backdrop">
       
-      <div class="game-modal">
+      <div class="success-modal">
         <!-- Rivets for industrial look -->
         <div class="detail-rivets detail-rivet-tl"></div>
         <div class="detail-rivets detail-rivet-tr"></div>
@@ -227,12 +226,51 @@
             Next Number
             <i class="fas fa-arrow-right"></i>
           </button>
+        </div>  
+    
+      </div>
+      
+      <div class="restart-modal">
+        <!-- Rivets for industrial look -->
+        <div class="detail-rivets detail-rivet-tl"></div>
+        <div class="detail-rivets detail-rivet-tr"></div>
+        <div class="detail-rivets detail-rivet-bl"></div>
+        <div class="detail-rivets detail-rivet-br"></div>
+    
+        <div class="modal-header error-header">
+          <h2 class="modal-title">
+            <i class="fas fa-exclamation-triangle"></i>
+            Production Failed!
+          </h2>
+          <div class="machine-lights">
+            <div class="machine-light light-red"></div>
+            <div class="machine-light light-red blink"></div>
+          </div>
         </div>
-  
-    </div>
+    
+        <div class="caution-stripe"></div>
+    
+        <div class="modal-body">
+          <div class="error-message">Production was not completed on time</div>
+          
+          <div class="error-hint">
+            Try again!
+          </div>
+        </div>
+    
+        <div class="modal-footer">
+          <button class="incorrect-next-btn restart-btn">
+            Restart
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
 
+
+      
     
-    
+      </div>
+
+    </div>
     <!-- Confetti animation container -->
     <div class="confetti-container" id="confetti-container"></div>
 
