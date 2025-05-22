@@ -496,13 +496,15 @@ body {
     top: 10px;
     left: 50px;
     user-select: none;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: transform, left, top;
     border: 3px solid rgba(0, 0, 0, 0.3);
     box-shadow:
         inset 0 0 15px rgba(255, 255, 255, 0.3),
         0 8px 15px rgba(0, 0, 0, 0.4);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
 }
 
 .cargo-crate.selected {
@@ -1192,3 +1194,24 @@ body {
     cursor: pointer;
     z-index: 100;
 }
+
+.slot-digit {
+    position: relative;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent !important;
+    overflow: visible;
+}
+
+.slot-digit .cargo-crate {
+    position: relative;
+    transform: none !important;
+    left: auto !important;
+    top: auto !important;
+    pointer-events: none;
+    margin: 0 auto;
+}
+
